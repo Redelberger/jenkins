@@ -1,13 +1,24 @@
+def gv
+
 pipeline {
     agent any
     parameters{
         choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanPatram(name: 'executeTests', defauultValue: true, description: '')
+        booleanParam(name: 'executeTests', defauultValue: true, description: '')
     }
     stages {
+        stage('Init') {
+            steps {
+                script {
+                    gv = load "script.groovy"
+                }
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Building the application..'
+                script {
+                    gv.buildApp()
+                }
             }
         }
         stage('Test') {
@@ -17,13 +28,16 @@ pipeline {
                 }
             }
             steps {
-                echo 'Testing the application..'
+                script {
+                    gv.testApp()
+                }
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying the application..'
-                echo "Deploying version ${params.VERSIOM}.."
+                script {
+                    gv.deployApp()
+                }
             }
         }
     }
