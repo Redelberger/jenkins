@@ -36,6 +36,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                timeout(time: 15, unit: "MINUTES") {
+	                input id: 'Approved', message: 'Has the previous been approved so we can proceed?', ok: 'Approved?', submitter: 'tobias@redelberger.onmicrosoft.com,012d1367-f5d3-4fbe-9697-b3d1e083daec', submitterParameter: 'Approver'
+	            }
                 script {
                     gv.deployApp()
                 }
